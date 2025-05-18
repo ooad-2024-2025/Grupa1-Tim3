@@ -1,1 +1,53 @@
+## Ignore build outputs
+bin/
+obj/
+
+## Visual Studio temporary files, caches, and user-specific files
 .vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider IDE
+.idea/
+
+## OS generated
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+## .NET Core publish output
+publish/
+
+## NuGet packages
+*.nupkg
+# The packages folder can be ignored because of PackageReference defined in project file
+packages/
+
+## Auto-generated EF Core migrations snapshot (optional)
+**/*ModelSnapshot.cs
+
+## Entity Framework files
+*.dbmdl
+*.dbproj.user
+
+## Resharper
+_ReSharper*/
+
+## IIS Express config
+/.vs/config/applicationhost.config
+
+## Debugging symbols and logs
+*.log
+*.tlog/
+
+## User secrets (if you use Secret Manager)
+secrets.json
+
+## Azure Functions staging artifacts
+bin/Release/net*/publish/
+
+## Docker
+docker-compose.override.yml
