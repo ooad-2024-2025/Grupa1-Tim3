@@ -4530,24 +4530,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\infoc\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\DT User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\infoc\\source\\repos\\Grupa1-Tim3\\Implementacija\\Nutritionist\\Nutritionist\\Nutritionist.csproj",
+      "projectUniqueName": "D:\\GitHub\\FAX\\Grupa1-Tim3\\Implementacija\\Nutritionist\\Nutritionist\\Nutritionist.csproj",
       "projectName": "Nutritionist",
-      "projectPath": "C:\\Users\\infoc\\source\\repos\\Grupa1-Tim3\\Implementacija\\Nutritionist\\Nutritionist\\Nutritionist.csproj",
-      "packagesPath": "C:\\Users\\infoc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\infoc\\source\\repos\\Grupa1-Tim3\\Implementacija\\Nutritionist\\Nutritionist\\obj\\",
+      "projectPath": "D:\\GitHub\\FAX\\Grupa1-Tim3\\Implementacija\\Nutritionist\\Nutritionist\\Nutritionist.csproj",
+      "packagesPath": "C:\\Users\\DT User\\.nuget\\packages\\",
+      "outputPath": "D:\\GitHub\\FAX\\Grupa1-Tim3\\Implementacija\\Nutritionist\\Nutritionist\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\infoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\DT User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4568,6 +4563,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4614,7 +4614,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
