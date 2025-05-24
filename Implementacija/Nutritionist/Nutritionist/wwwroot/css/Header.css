@@ -1,0 +1,41 @@
+﻿.custom-navbar {
+background-color: #ffffff;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-navbar .navbar-brand {
+color: #000000;
+}
+
+.custom-navbar .navbar-brand:hover {
+    color: #000000;
+}
+
+.custom-navbar .nav-link {
+    color: #555555;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link:focus {
+    color: #000000;
+}
+
+.custom-navbar .bi {
+    font-size: 1.2rem;
+    color: #555555;
+}
+
+.custom-navbar a.nav-link.d-flex .bi {
+    margin-right: 0.25rem;
+}
+
+.custom-navbar a.nav-link:hover .bi {
+    color: #000000;
+}
+
+.custom-navbar.box-shadow {
+    box-shadow: none !important;
+}
