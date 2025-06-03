@@ -19,13 +19,13 @@ namespace Nutritionist.Models
             set => base.PhoneNumber = value;
         }
         [Display(Name = "Ime")]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
         [Display(Name = "Prezime")]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         [Display(Name = "Spol")]
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         [Display(Name = "Datum rodjenja")]
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
         [Display(Name = "Datum kreiranja")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Display(Name = "Newsletter pretplatnik")]

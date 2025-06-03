@@ -38,15 +38,21 @@
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <a class="nav-link d-flex align-items-center"
-                       asp-area="Identity"
-                       asp-page="/Account/Login">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>Prijava
-                    </a>
-                    <a class="nav-link ms-3"
-                       asp-controller="Identity" asp-action="Account/Profile">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link d-flex align-items-center"
+                        asp-area="Identity"
+                        asp-page="/Account/Login">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Prijava
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="nav-link ms-3"
+                        asp-controller="Identity" asp-action="Account/Profile">
+                            <i class="bi bi-person-circle"></i>
+                        </a>
+                    }
                 </div>
             </div>
         </nav>

@@ -64,6 +64,10 @@ namespace Nutritionist.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
+            [Display(Name = "Broj telefona")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
             [Display(Name = "Spol")]
             public Gender Gender { get; set; }
 
@@ -111,6 +115,7 @@ namespace Nutritionist.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.Gender = Input.Gender;
                 user.Birthday = Input.Birthday;
+                user.PhoneNumber = Input.PhoneNumber;
 
                 // Set username and email:
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

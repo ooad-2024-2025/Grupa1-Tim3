@@ -34,6 +34,15 @@
             </div>
 
             <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber"
+                       class="form-control"
+                       type="tel"
+                       placeholder="Broj telefona" />
+                <label asp-for="Input.PhoneNumber">Prezime</label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
                 <select asp-for="Input.Gender" class="form-select">
                     <option value="">Odaberite spol</option>
                     <option value="MALE">Muški</option>
