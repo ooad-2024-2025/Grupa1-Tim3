@@ -1,4 +1,4 @@
-﻿@model Nutritionist.Models.Recipe
+﻿@model Nutritionist.ViewModels.RecipeCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -10,7 +10,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-area="Admin"
+              asp-controller="Recipes"
+              asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -23,18 +28,16 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control"></select>
+                <select asp-for="Type" asp-items="Html.GetEnumSelectList<RecipeType>()" class="form-control"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TimeToMake" class="control-label"></label>
-                <input asp-for="TimeToMake" class="form-control" />
+                <input asp-for="TimeToMake"
+                       type="time"
+                       step="1"
+                       class="form-control" />
                 <span asp-validation-for="TimeToMake" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -42,9 +45,14 @@
                 <input asp-for="Ingredients" class="form-control" />
                 <span asp-validation-for="Ingredients" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="ImageFile"></label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

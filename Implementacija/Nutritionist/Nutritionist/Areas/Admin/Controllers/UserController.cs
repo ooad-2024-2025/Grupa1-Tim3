@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nutritionist.Data;
 using Nutritionist.Models;
 
 namespace Nutritionist.Controllers
 {
-    public class NewslettersController : Controller
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public NewslettersController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Newsletters
+        // GET: User
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Newsletters.Include(n => n.User);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
-        // GET: Newsletters/Details/5
+        // GET: User/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,43 +31,39 @@ namespace Nutritionist.Controllers
                 return NotFound();
             }
 
-            var newsletter = await _context.Newsletters
-                .Include(n => n.User)
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (newsletter == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(newsletter);
+            return View(user);
         }
 
-        // GET: Newsletters/Create
+        // GET: User/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: Newsletters/Create
+        // POST: User/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedAt,Title,Text,UserId")] Newsletter newsletter)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Gender,Birthday,CreatedAt,IsSubscribedToNewsletter,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
         {
             if (ModelState.IsValid)
             {
-                newsletter.Id = Guid.NewGuid();
-                _context.Add(newsletter);
+                user.Id = Guid.NewGuid();
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", newsletter.UserId);
-            return View(newsletter);
+            return View(user);
         }
 
-        // GET: Newsletters/Edit/5
+        // GET: User/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -78,23 +71,22 @@ namespace Nutritionist.Controllers
                 return NotFound();
             }
 
-            var newsletter = await _context.Newsletters.FindAsync(id);
-            if (newsletter == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", newsletter.UserId);
-            return View(newsletter);
+            return View(user);
         }
 
-        // POST: Newsletters/Edit/5
+        // POST: User/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,CreatedAt,Title,Text,UserId")] Newsletter newsletter)
+        public async Task<IActionResult> Edit(Guid id, [Bind("FirstName,LastName,Gender,Birthday,CreatedAt,IsSubscribedToNewsletter,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
         {
-            if (id != newsletter.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -103,12 +95,12 @@ namespace Nutritionist.Controllers
             {
                 try
                 {
-                    _context.Update(newsletter);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NewsletterExists(newsletter.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +111,10 @@ namespace Nutritionist.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", newsletter.UserId);
-            return View(newsletter);
+            return View(user);
         }
 
-        // GET: Newsletters/Delete/5
+        // GET: User/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -131,35 +122,34 @@ namespace Nutritionist.Controllers
                 return NotFound();
             }
 
-            var newsletter = await _context.Newsletters
-                .Include(n => n.User)
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (newsletter == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(newsletter);
+            return View(user);
         }
 
-        // POST: Newsletters/Delete/5
+        // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var newsletter = await _context.Newsletters.FindAsync(id);
-            if (newsletter != null)
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
             {
-                _context.Newsletters.Remove(newsletter);
+                _context.Users.Remove(user);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NewsletterExists(Guid id)
+        private bool UserExists(Guid id)
         {
-            return _context.Newsletters.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

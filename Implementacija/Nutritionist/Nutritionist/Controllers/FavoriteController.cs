@@ -1,171 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nutritionist.Data;
 using Nutritionist.Models;
 
 namespace Nutritionist.Controllers
 {
+    [Authorize]
     public class FavoriteController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
+        private readonly UserManager<User> _users;
 
-        public FavoriteController(ApplicationDbContext context)
+        public FavoriteController(ApplicationDbContext db, UserManager<User> users)
         {
-            _context = context;
+            _db = db;
+            _users = users;
         }
 
-        // GET: Favorite
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> MyFavorites()
         {
-            var applicationDbContext = _context.Favorites.Include(f => f.Recipe).Include(f => f.User);
-            return View(await applicationDbContext.ToListAsync());
-        }
+            var user = await _users.GetUserAsync(User);
+            if (user == null) return Challenge();
 
-        // GET: Favorite/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var favorite = await _context.Favorites
+            // Fetch only the Recipes they favorited
+            var recipes = await _db.Favorites
+                .Where(f => f.UserId == user.Id)
                 .Include(f => f.Recipe)
-                .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (favorite == null)
-            {
-                return NotFound();
-            }
+                .Select(f => f.Recipe)
+                .ToListAsync();
 
-            return View(favorite);
+            return View(recipes);
         }
 
-        // GET: Favorite/Create
-        public IActionResult Create()
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Toggle(Guid recipeId)
         {
-            ViewData["RecipeId"] = new SelectList(_context.Recipes, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
-        }
+            var user = await _users.GetUserAsync(User);
+            if (user == null) return Challenge();
 
-        // POST: Favorite/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AddedAt,UserId,RecipeId")] Favorite favorite)
-        {
-            if (ModelState.IsValid)
-            {
-                favorite.Id = Guid.NewGuid();
-                _context.Add(favorite);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["RecipeId"] = new SelectList(_context.Recipes, "Id", "Id", favorite.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", favorite.UserId);
-            return View(favorite);
-        }
+            var fav = await _db.Favorites
+                 .FirstOrDefaultAsync(f => f.UserId == user.Id && f.RecipeId == recipeId);
 
-        // GET: Favorite/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var favorite = await _context.Favorites.FindAsync(id);
-            if (favorite == null)
-            {
-                return NotFound();
-            }
-            ViewData["RecipeId"] = new SelectList(_context.Recipes, "Id", "Id", favorite.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", favorite.UserId);
-            return View(favorite);
-        }
-
-        // POST: Favorite/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,AddedAt,UserId,RecipeId")] Favorite favorite)
-        {
-            if (id != favorite.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+            if (fav != null)
+                _db.Favorites.Remove(fav);
+            else
+                _db.Favorites.Add(new Favorite
                 {
-                    _context.Update(favorite);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FavoriteExists(favorite.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["RecipeId"] = new SelectList(_context.Recipes, "Id", "Id", favorite.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", favorite.UserId);
-            return View(favorite);
-        }
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    RecipeId = recipeId,
+                    AddedAt = DateTime.UtcNow
+                });
 
-        // GET: Favorite/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var favorite = await _context.Favorites
-                .Include(f => f.Recipe)
-                .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (favorite == null)
-            {
-                return NotFound();
-            }
-
-            return View(favorite);
-        }
-
-        // POST: Favorite/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var favorite = await _context.Favorites.FindAsync(id);
-            if (favorite != null)
-            {
-                _context.Favorites.Remove(favorite);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool FavoriteExists(Guid id)
-        {
-            return _context.Favorites.Any(e => e.Id == id);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Details", "Recipes", new { id = recipeId });
         }
     }
 }

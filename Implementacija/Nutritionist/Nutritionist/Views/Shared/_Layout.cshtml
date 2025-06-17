@@ -29,11 +29,21 @@
 
                 <div class="collapse navbar-collapse justify-content-center" id="mainNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Početna</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Recipes" asp-action="Index">Recepti</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Newsletter" asp-action="Index">Newsletter</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="About" asp-action="Index">O nama</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Contact" asp-action="Index">Kontakt</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Početna</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Recipes" asp-action="Index">Recepti</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Newsletter" asp-action="Index">Newsletter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="About" asp-action="Index">O nama</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="Index">Kontakt</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -49,7 +59,8 @@
                     else
                     {
                         <a class="nav-link ms-3"
-                        asp-controller="Identity" asp-action="Account/Profile">
+                           asp-controller="Account"
+                           asp-action="Profile">
                             <i class="bi bi-person-circle"></i>
                         </a>
                     }

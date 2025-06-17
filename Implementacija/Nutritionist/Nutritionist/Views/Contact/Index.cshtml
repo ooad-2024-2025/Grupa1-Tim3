@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Kontakt";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4">Kontaktirajte nas</h1>
+    <p class="mb-4">
+        Imate pitanja? Javite nam se putem obrasca ispod ili nas pronađite na društvenim mrežama.
+    </p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-controller="Contact" asp-action="Index" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label">Ime</label>
+                <input type="text" class="form-control" id="name" name="Name" placeholder="Vaše ime" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="Email" placeholder="name@example.com" required>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Poruka</label>
+                <textarea class="form-control" id="message" name="Message" rows="5" placeholder="Vaša poruka" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Pošalji</button>
+        </form>
+    </div>
+</div>

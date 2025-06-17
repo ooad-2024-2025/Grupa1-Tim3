@@ -21,12 +21,14 @@ namespace Nutritionist.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -116,6 +118,11 @@ namespace Nutritionist.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            return LocalRedirect(Url.Content("~/Admin"));
+                        }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

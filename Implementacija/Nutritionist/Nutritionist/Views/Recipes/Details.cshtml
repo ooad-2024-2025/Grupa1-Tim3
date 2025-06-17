@@ -1,0 +1,58 @@
+﻿@using System.Security.Claims
+@model Nutritionist.Models.Recipe
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="text-center mt-5 mb-4">
+    <h1 class="display-4">@Model.Title</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Title" />
+            <div class="card-body">
+                <h5 class="card-title">@Model.Title</h5>
+                <p class="card-text">@Model.Description</p>
+
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item"><strong>Tip:</strong> @Model.Type</li>
+                    <li class="list-group-item"><strong>Vrijeme pripreme:</strong> @Model.TimeToMake</li>
+                    <li class="list-group-item"><strong>Sastojci:</strong> @Model.Ingredients</li>
+                    <li class="list-group-item"><strong>Autor:</strong> @Model.User.UserName</li>
+                </ul>
+
+                @{
+                    // grab current user id
+                    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    // check if they’ve favorited this recipe
+                    var isFavorited = Model.Favorites.Any(f => f.UserId.ToString() == currentUserId);
+                }
+
+                <div class="text-center mb-3">
+                    <form asp-controller="Favorite" asp-action="Toggle" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="recipeId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-link p-0">
+                            @if (isFavorited)
+                            {
+                                <i class="bi bi-heart-fill text-danger" style="font-size: 2rem;">Izbaci iz favorita</i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-heart" style="font-size: 2rem;">Dodaj u favorite</i>
+                            }
+                        </button>
+                    </form>
+                </div>
+
+                <div class="text-center">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        Natrag na recepte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

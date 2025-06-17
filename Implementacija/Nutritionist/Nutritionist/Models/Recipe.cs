@@ -1,4 +1,6 @@
-﻿namespace Nutritionist.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace Nutritionist.Models
 {
     public class Recipe
     {
@@ -10,10 +12,11 @@
         public TimeSpan TimeToMake { get; set; }
         public string Ingredients { get; set; }
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        public string? ImageUrl { get; set; }
+        [ValidateNever] public User User { get; set; }
 
-        public ICollection<Favorite> Favorites { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        [ValidateNever] public ICollection<Favorite> Favorites { get; set; }
+        [ValidateNever] public ICollection<Review> Reviews { get; set; }
     }
 
     public enum RecipeType

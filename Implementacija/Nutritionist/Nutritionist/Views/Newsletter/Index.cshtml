@@ -1,0 +1,45 @@
+﻿@model Nutritionist.ViewModels.NewsletterViewModel
+@{
+    ViewData["Title"] = "Newsletter";
+}
+
+<div class="text-center mt-5 mb-4">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                @if (!Model.IsSubscribed)
+                {
+                    <p class="lead">
+                        Svake sedmice naš nutricionista šalje korisne savjete o prehrani
+                        direktno na vašu e-mail adresu.
+                    </p>
+                    <p>
+                        Ako želite primati sedmični newsletter, kliknite dugme ispod.
+                    </p>
+                    <form asp-action="Toggle" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-lg btn-primary">
+                            Pretplati se
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <p class="lead text-success">
+                        Već ste pretplaćeni na naš newsletter!
+                    </p>
+                    <form asp-action="Toggle" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-lg btn-danger">
+                            Otkaži pretplatu
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
