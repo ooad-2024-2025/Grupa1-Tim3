@@ -32,7 +32,7 @@
                             @(Model.User.IsSubscribedToNewsletter ? "Da" : "Ne")
                         </p>
 
-                        @if (Model.IsAdmin)
+                        @if (Model.IsAdmin || Model.IsNutritionist)
                         {
                             <a href="/Admin" class="btn btn-sm btn-warning mt-2">Idi na Admin Panel</a>
                         }

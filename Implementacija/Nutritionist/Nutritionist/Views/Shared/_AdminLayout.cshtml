@@ -19,12 +19,14 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link" href="/">
-                            <i class="bi bi-speedometer2 me-2"></i>Home
+                            <i class="bi bi-speedometer2 me-2"></i>Pocetna
                         </a>
                     </li>
+                    @if (User.IsInRole("Admin"))
+  {
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="User" asp-action="Index">
-                            <i class="bi bi-people me-2"></i>Users
+                            <i class="bi bi-people me-2"></i>Korisnici
                         </a>
                     </li>
                     <li class="nav-item">
@@ -32,11 +34,15 @@
                             <i class="bi bi-fork-knife me-2"></i>Recepti
                         </a>
                     </li>
+                    }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Nutricionista"))
+  {
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="Newsletters" asp-action="Index">
                             <i class="bi bi-newspaper me-2"></i>Newsletter
                         </a>
                     </li>
+                    }
                 </ul>
             </div>
         </nav>

@@ -19,7 +19,7 @@
                   novalidate>
                 @Html.AntiForgeryToken()
 
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                <div asp-validation-summary="All" class="text-danger mb-3" role="alert"></div>
 
                 <div class="form-floating mb-3">
                     <input asp-for="Input.FirstName"
@@ -66,9 +66,9 @@
                             class="form-select"
                             required>
                         <option value="">Odaberite spol</option>
-                        <option value="MALE">Muški</option>
-                        <option value="FEMALE">Ženski</option>
-                        <option value="OTHER">Ostalo</option>
+                        <option value="Musko">Muški</option>
+                        <option value="Zensko">Ženski</option>
+                        <option value="Ostalo">Ostalo</option>
                     </select>
                     <label asp-for="Input.Gender">Spol</label>
                     <div class="invalid-feedback">Odaberite spol.</div>

@@ -6,6 +6,7 @@ namespace Nutritionist.ViewModels
     {
         public User User { get; set; }
         public bool IsAdmin { get; set; }
+        public bool IsNutritionist { get; set; }
 
         public List<Recipe> FavoriteRecipes { get; set; } = new();
     }

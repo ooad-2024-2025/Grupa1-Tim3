@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nutritionist.Data;
@@ -12,10 +13,12 @@ namespace Nutritionist.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: User
@@ -66,14 +69,24 @@ namespace Nutritionist.Controllers
                 Email = vm.Email,
                 UserName = vm.UserName,
                 NormalizedEmail = vm.Email.ToUpperInvariant(),
-                NormalizedUserName = vm.Email.ToUpperInvariant(),
+                NormalizedUserName = vm.UserName.ToUpperInvariant(),
                 PhoneNumber = vm.PhoneNumber,
                 IsSubscribedToNewsletter = vm.IsSubscribedToNewsletter,
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            // 1) create the user (you can also pass a default password here)
+            var result = await _userManager.CreateAsync(user, "Password123!");
+            if (!result.Succeeded)
+            {
+                foreach (var e in result.Errors)
+                    ModelState.AddModelError("", e.Description);
+                return View(vm);
+            }
+
+            // 2) assign them the Korisnik role
+            await _userManager.AddToRoleAsync(user, "Korisnik");
+
             return RedirectToAction(nameof(Index));
         }
 

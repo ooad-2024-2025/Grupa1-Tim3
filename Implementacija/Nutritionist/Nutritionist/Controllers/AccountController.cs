@@ -28,6 +28,7 @@ namespace Nutritionist.Controllers
             if (user == null) return Challenge();
 
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            var isNutritionist = await _userManager.IsInRoleAsync(user, "Nutricionista");
 
             var favorites = await _db.Favorites
             .Where(f => f.UserId == user.Id)
@@ -39,6 +40,7 @@ namespace Nutritionist.Controllers
             {
                 User = user,
                 IsAdmin = isAdmin,
+                IsNutritionist = isNutritionist,
                 FavoriteRecipes = favorites
             };
 

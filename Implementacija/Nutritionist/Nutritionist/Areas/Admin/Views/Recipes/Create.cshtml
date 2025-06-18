@@ -1,12 +1,12 @@
 ﻿@model Nutritionist.ViewModels.RecipeCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Kreiraj recept";
 }
 
-<h1>Create</h1>
+<h1>Kreiraj</h1>
 
-<h4>Recipe</h4>
+<h4>Recept</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -46,20 +46,20 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div> *@
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label asp-for="ImageFile"></label>
                 <input asp-for="ImageFile" type="file" class="form-control" />
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Kreiraj" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Natrag na listu</a>
 </div>
 
 @section Scripts {

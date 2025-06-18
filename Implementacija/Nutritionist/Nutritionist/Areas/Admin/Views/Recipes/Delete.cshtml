@@ -1,63 +1,40 @@
 ﻿@model Nutritionist.Models.Recipe
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Obriši recept";
 }
 
-<h1>Delete</h1>
+<div class="text-center mt-5 mb-4">
+    <h1 class="display-4">Obriši recept</h1>
+    <h5 class="text-muted">
+        Jeste li sigurni da želite obrisati recept
+        <strong>“@Model.Title”</strong>?
+    </h5>
+</div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Recipe</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TimeToMake)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TimeToMake)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ingredients)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ingredients)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-3 mb-4 shadow-sm">
+            <dl class="row mb-4">
+                <dt class="col-sm-4">Naslov</dt>
+                <dd class="col-sm-8">@Model.Title</dd>
+
+                <dt class="col-sm-4">Tip</dt>
+                <dd class="col-sm-8">@Model.Type</dd>
+
+                <dt class="col-sm-4">Vrijeme pripreme</dt>
+                <dd class="col-sm-8">@Model.TimeToMake</dd>
+            </dl>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    Obriši
+                </button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">
+                    Odustani
+                </a>
+            </form>
+        </div>
+    </div>
 </div>

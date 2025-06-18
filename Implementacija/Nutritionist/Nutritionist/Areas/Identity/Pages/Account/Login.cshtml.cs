@@ -68,22 +68,15 @@ namespace Nutritionist.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [Display(Name = "Korisnicko ime")]
+            public string UserName { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Lozinka")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Zapamti me")]
             public bool RememberMe { get; set; }
         }
 
@@ -114,15 +107,23 @@ namespace Nutritionist.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+                    var user = await _userManager.FindByNameAsync(Input.UserName);
+                    if (user != null)
+                    {
+                        if (await _userManager.IsInRoleAsync(user, "Admin"))
                         {
                             return LocalRedirect(Url.Content("~/Admin"));
                         }
+                        if (await _userManager.IsInRoleAsync(user, "Nutricionista"))
+                        {
+                            // send Nutricionista straight to the newsletter section
+                            return LocalRedirect(Url.Content("~/Admin/Newsletters"));
+                        }
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
