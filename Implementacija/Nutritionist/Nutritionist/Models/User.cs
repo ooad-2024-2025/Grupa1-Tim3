@@ -39,8 +39,8 @@ namespace Nutritionist.Models
 
     public enum Gender
     {
-        MALE,
-        FEMALE,
-        OTHER
+        Musko,
+        Zensko,
+        Ostalo
     }
 }

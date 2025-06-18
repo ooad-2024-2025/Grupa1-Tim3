@@ -228,8 +228,9 @@ namespace Nutritionist.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("TimeToMake")
-                        .HasColumnType("time");
+                    b.Property<string>("TimeToMake")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()

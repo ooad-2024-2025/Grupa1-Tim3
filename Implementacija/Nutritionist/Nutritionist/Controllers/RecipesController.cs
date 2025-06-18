@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nutritionist.Data;
+using Nutritionist.Models;
+using Nutritionist.ViewModels;
 
 namespace Nutritionist.Controllers
 {
@@ -14,12 +16,26 @@ namespace Nutritionist.Controllers
             => _context = context;
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(RecipeType? type)
         {
-            var recipes = await _context.Recipes
-                .Include(r => r.User)
-                .ToListAsync();
-            return View(recipes);
+            // Base query
+            var query = _context.Recipes
+                           .Include(r => r.User)
+                           .AsQueryable();
+
+            // Optional filter
+            if (type.HasValue)
+                query = query.Where(r => r.Type == type.Value);
+
+            // Build VM
+            var vm = new RecipeListViewModel
+            {
+                Recipes = await query.ToListAsync(),
+                RecipeTypes = Enum.GetValues<RecipeType>().Cast<RecipeType>(),
+                SelectedType = type
+            };
+
+            return View(vm);
         }
 
         [HttpGet]
@@ -30,6 +46,8 @@ namespace Nutritionist.Controllers
             var recipe = await _context.Recipes
                 .Include(r => r.User)
                 .Include(r => r.Favorites)
+                .Include(r => r.Reviews)
+                    .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null) return NotFound();

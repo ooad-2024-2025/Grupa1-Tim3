@@ -121,55 +121,48 @@ namespace Nutritionist.Areas.Admin.Controllers
         // GET: Recipe/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var recipe = await _context.Recipes.FindAsync(id.Value);
+            if (recipe == null) return NotFound();
 
-            var recipe = await _context.Recipes.FindAsync(id);
-            if (recipe == null)
+            var vm = new RecipeEditViewModel
             {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", recipe.UserId);
-            return View(recipe);
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Description = recipe.Description,
+                Type = recipe.Type,
+                TimeToMake = recipe.TimeToMake,
+                Ingredients = recipe.Ingredients,
+                ExistingImageUrl = recipe.ImageUrl
+            };
+            return View(vm);
         }
 
         // POST: Recipe/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description,CreatedAt,Type,TimeToMake,Ingredients,UserId")] Recipe recipe)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(RecipeEditViewModel vm)
         {
-            if (id != recipe.Id)
-            {
-                return NotFound();
-            }
+            if (!ModelState.IsValid)
+                return View(vm);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(recipe);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RecipeExists(recipe.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", recipe.UserId);
-            return View(recipe);
+            var recipe = await _context.Recipes.FindAsync(vm.Id);
+            if (recipe == null)
+                return NotFound();
+
+            // map updates
+            recipe.Title = vm.Title;
+            recipe.Description = vm.Description;
+            recipe.Type = vm.Type;
+            recipe.TimeToMake = vm.TimeToMake;
+            recipe.Ingredients = vm.Ingredients;
+
+            _context.Update(recipe);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: Recipe/Delete/5
         public async Task<IActionResult> Delete(Guid? id)

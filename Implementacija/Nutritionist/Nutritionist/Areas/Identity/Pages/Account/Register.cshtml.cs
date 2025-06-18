@@ -64,6 +64,10 @@ namespace Nutritionist.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
+            [Display(Name = "Korisnicko Ime")]
+            public string UserName { get; set; }
+
+            [Required]
             [Display(Name = "Broj telefona")]
             public string PhoneNumber { get; set; }
 

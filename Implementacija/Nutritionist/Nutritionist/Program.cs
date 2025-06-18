@@ -5,10 +5,13 @@ using Nutritionist.Models;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Azure.Storage.Blobs;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -24,6 +27,9 @@ builder.Services.AddSingleton(sp =>
     new BlobContainerClient(
         blobConfig["ConnectionString"],
         blobConfig["ContainerName"]));
+
+builder.Services.Configure<SendGridOptions>(builder.Configuration.GetSection("SendGrid"));
+builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 
 var app = builder.Build();
 
@@ -75,3 +81,27 @@ app.MapRazorPages();
 //}
 
 app.Run();
+
+public class SendGridOptions
+{
+    public string ApiKey { get; set; }
+}
+
+public class SendGridEmailSender : IEmailSender
+{
+    private readonly SendGridOptions _options;
+    public SendGridEmailSender(IOptions<SendGridOptions> opts) => _options = opts.Value;
+
+    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+    {
+        var client = new SendGridClient(_options.ApiKey);
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress("edzafo1@etf.unsa.ba", "Nutritionist"),
+            Subject = subject,
+            HtmlContent = htmlMessage
+        };
+        msg.AddTo(new EmailAddress(email));
+        await client.SendEmailAsync(msg);
+    }
+}

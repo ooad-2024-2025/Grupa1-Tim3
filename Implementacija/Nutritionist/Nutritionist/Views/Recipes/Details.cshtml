@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using Nutritionist.ViewModels
 @model Nutritionist.Models.Recipe
 @{
     ViewData["Title"] = Model.Title;
@@ -46,6 +47,61 @@
                         </button>
                     </form>
                 </div>
+
+                <div class="mt-5">
+                    <h3>Recenzije</h3>
+                    @if (!Model.Reviews.Any())
+                    {
+                        <p>Nema recenzija. Budite prvi koji će ostaviti recenziju!</p>
+                    }
+                    else
+                    {
+                        <div class="list-group">
+                            @foreach (var rv in Model.Reviews)
+                            {
+                                <div class="list-group-item mb-2 shadow-sm">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>@rv.User.UserName</strong>
+                                        <small class="text-muted">@rv.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                                    </div>
+                                    <div>
+                                        @for (int i = 0; i < rv.Rating; i++)
+                                        {
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                        }
+                                        @for (double i = rv.Rating; i < 5; i++)
+                                        {
+                                            <i class="bi bi-star text-warning"></i>
+                                        }
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(rv.Comment))
+                                    {
+                                        <p class="mt-2">@rv.Comment</p>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="mt-4">
+                        <h4>Dodaj recenziju</h4>
+                        @* pass a new VM with RecipeId preset *@
+                        @await Html.PartialAsync(
+                                 "_ReviewForm",
+                                 new ReviewCreateViewModel { RecipeId = Model.Id }
+                                 )
+                    </div>
+                }
+                else
+                {
+                    <p class="mt-4">
+                        Za dodavanje recenzije
+                        <a asp-controller="Account" asp-action="Profile">prijavite se</a>.
+                    </p>
+                }
 
                 <div class="text-center">
                     <a asp-action="Index" class="btn btn-secondary">

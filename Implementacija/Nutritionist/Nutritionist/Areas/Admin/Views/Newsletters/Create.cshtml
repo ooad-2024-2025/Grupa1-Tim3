@@ -1,0 +1,24 @@
+﻿@model Nutritionist.ViewModels.NewsletterCreateViewModel
+@{
+    ViewData["Title"] = "Kreiraj newsletter";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-area="Admin" asp-controller="Newsletters" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Text" class="form-label"></label>
+        <textarea asp-for="Text" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Pošalji newsletter</button>
+    <a asp-area="Admin" asp-controller="Newsletters" asp-action="Index" class="btn btn-secondary ms-2">
+        Poništi
+    </a>
+</form>

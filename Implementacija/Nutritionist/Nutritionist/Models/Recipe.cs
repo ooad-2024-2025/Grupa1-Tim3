@@ -9,7 +9,7 @@ namespace Nutritionist.Models
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public RecipeType Type { get; set; }
-        public TimeSpan TimeToMake { get; set; }
+        public string TimeToMake { get; set; }
         public string Ingredients { get; set; }
         public Guid UserId { get; set; }
         public string? ImageUrl { get; set; }
@@ -21,11 +21,11 @@ namespace Nutritionist.Models
 
     public enum RecipeType
     {
-        BREAKFAST,
-        LUNCH,
-        DINNER,
-        DESSERT,
-        SALAD,
-        DRINK
+        Dorucak,
+        Rucak,
+        Vecera,
+        Desert,
+        Salata,
+        ZaPiti
     }
 }

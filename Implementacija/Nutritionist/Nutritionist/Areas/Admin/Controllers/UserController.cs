@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nutritionist.Data;
 using Nutritionist.Models;
+using Nutritionist.ViewModels;
 
 namespace Nutritionist.Controllers
 {
@@ -49,69 +50,82 @@ namespace Nutritionist.Controllers
 
         // POST: User/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Gender,Birthday,CreatedAt,IsSubscribedToNewsletter,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(UserEditViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            var user = new User
             {
-                user.Id = Guid.NewGuid();
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
+                Id = Guid.NewGuid(),
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+                Gender = vm.Gender,
+                Birthday = vm.Birthday,
+                Email = vm.Email,
+                UserName = vm.UserName,
+                NormalizedEmail = vm.Email.ToUpperInvariant(),
+                NormalizedUserName = vm.Email.ToUpperInvariant(),
+                PhoneNumber = vm.PhoneNumber,
+                IsSubscribedToNewsletter = vm.IsSubscribedToNewsletter,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: User/Edit/5
+        // GET: Admin/Users/Edit/{id}
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var user = await _context.Users.FindAsync(id.Value);
+            if (user == null) return NotFound();
+
+            var vm = new UserEditViewModel
             {
-                return NotFound();
-            }
-            return View(user);
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Gender = user.Gender,
+                Birthday = user.Birthday,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IsSubscribedToNewsletter = user.IsSubscribedToNewsletter
+            };
+            return View(vm);
         }
 
-        // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("FirstName,LastName,Gender,Birthday,CreatedAt,IsSubscribedToNewsletter,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
+        // POST: Admin/Users/Edit/{id}
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UserEditViewModel vm)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
+            if (!ModelState.IsValid)
+                return View(vm);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
+            var user = await _context.Users.FindAsync(vm.Id);
+            if (user == null) return NotFound();
+
+            // map only the editable fields back
+            user.FirstName = vm.FirstName;
+            user.LastName = vm.LastName;
+            user.Gender = vm.Gender;
+            user.Birthday = vm.Birthday;
+            user.Email = vm.Email;
+            user.UserName = vm.UserName;        // or keep email==username
+            user.NormalizedEmail = vm.Email.ToUpperInvariant();
+            user.NormalizedUserName = vm.Email.ToUpperInvariant();
+            user.PhoneNumber = vm.PhoneNumber;
+            user.IsSubscribedToNewsletter = vm.IsSubscribedToNewsletter;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: User/Delete/5

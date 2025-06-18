@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.recipe-thumb {
+    width: 100%; /* fill the card’s width */
+    height: 200px; /* change to whatever height you like */
+    object-fit: cover; /* crop/scale to cover the box */
+    object-position: center; /* center the image if it gets cropped */
+}

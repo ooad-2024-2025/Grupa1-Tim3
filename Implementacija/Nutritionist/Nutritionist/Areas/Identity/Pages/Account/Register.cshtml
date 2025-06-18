@@ -1,146 +1,157 @@
 ﻿@page
 @model RegisterModel
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Registracija";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName"
-                       class="form-control"
-                       autocomplete="given-name"
-                       placeholder="First name" />
-                <label asp-for="Input.FirstName">Ime</label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <h2 class="card-title">Nutritionist</h2>
+                <h4 class="card-subtitle text-muted">Registracija</h4>
             </div>
 
+            <form asp-route-returnUrl="@Model.ReturnUrl"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+                @Html.AntiForgeryToken()
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName"
-                       class="form-control"
-                       autocomplete="family-name"
-                       placeholder="Last name" />
-                <label asp-for="Input.LastName">Prezime</label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber"
-                       class="form-control"
-                       type="tel"
-                       placeholder="Broj telefona" />
-                <label asp-for="Input.PhoneNumber">Prezime</label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.FirstName"
+                           class="form-control"
+                           autocomplete="given-name"
+                           placeholder="Ime"
+                           required />
+                    <label asp-for="Input.FirstName">Ime</label>
+                    <div class="invalid-feedback">Unesite ime.</div>
+                </div>
 
-            <div class="form-floating mb-3">
-                <select asp-for="Input.Gender" class="form-select">
-                    <option value="">Odaberite spol</option>
-                    <option value="MALE">Muški</option>
-                    <option value="FEMALE">Ženski</option>
-                    <option value="OTHER">Ostalo</option>
-                </select>
-                <label asp-for="Input.Gender">Spol</label>
-                <span asp-validation-for="Input.Gender" class="text-danger"></span>
-            </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.LastName"
+                           class="form-control"
+                           autocomplete="family-name"
+                           placeholder="Prezime"
+                           required />
+                    <label asp-for="Input.LastName">Prezime</label>
+                    <div class="invalid-feedback">Unesite prezime.</div>
+                </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Birthday"
-                       class="form-control"
-                       type="date"
-                       placeholder="Datum rođenja" />
-                <label asp-for="Input.Birthday">Datum rođenja</label>
-                <span asp-validation-for="Input.Birthday" class="text-danger"></span>
-            </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.UserName"
+                           class="form-control"
+                           autocomplete="username"
+                           placeholder="Korisničko ime"
+                           required />
+                    <label asp-for="Input.UserName">Korisničko ime</label>
+                    <div class="invalid-feedback">Unesite korisničko ime.</div>
+                </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email"
-                       class="form-control"
-                       autocomplete="username"
-                       aria-required="true"
-                       placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.PhoneNumber"
+                           class="form-control"
+                           type="tel"
+                           placeholder="Broj telefona"
+                           required />
+                    <label asp-for="Input.PhoneNumber">Telefon</label>
+                    <div class="invalid-feedback">Unesite broj telefona.</div>
+                </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password"
-                       class="form-control"
-                       autocomplete="new-password"
-                       aria-required="true"
-                       placeholder="Password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
+                <div class="form-floating mb-3">
+                    <select asp-for="Input.Gender"
+                            class="form-select"
+                            required>
+                        <option value="">Odaberite spol</option>
+                        <option value="MALE">Muški</option>
+                        <option value="FEMALE">Ženski</option>
+                        <option value="OTHER">Ostalo</option>
+                    </select>
+                    <label asp-for="Input.Gender">Spol</label>
+                    <div class="invalid-feedback">Odaberite spol.</div>
+                </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword"
-                       class="form-control"
-                       autocomplete="new-password"
-                       aria-required="true"
-                       placeholder="Confirm password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Birthday"
+                           class="form-control"
+                           type="date"
+                           placeholder="Datum rođenja"
+                           required />
+                    <label asp-for="Input.Birthday">Datum rođenja</label>
+                    <div class="invalid-feedback">Unesite datum rođenja.</div>
+                </div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">
-                Register
-            </button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this
-                            <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                article about setting up this ASP.NET application to support logging in via external services
-                            </a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account"
-                          asp-page="./ExternalLogin"
-                          asp-route-returnUrl="@Model.ReturnUrl"
-                          method="post"
-                          class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit"
-                                            class="btn btn-primary"
-                                            name="provider"
-                                            value="@provider.Name"
-                                            title="Log in using your @provider.DisplayName account">
-                                        @provider.DisplayName
-                                    </button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           autocomplete="username"
+                           placeholder="name@example.com"
+                           required />
+                    <label asp-for="Input.Email">Email</label>
+                    <div class="invalid-feedback">Unesite ispravnu email adresu.</div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password"
+                           type="password"
+                           class="form-control"
+                           autocomplete="new-password"
+                           placeholder="Lozinka"
+                           required />
+                    <label asp-for="Input.Password">Lozinka</label>
+                    <div class="invalid-feedback">Unesite lozinku.</div>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Input.ConfirmPassword"
+                           type="password"
+                           class="form-control"
+                           autocomplete="new-password"
+                           placeholder="Potvrdite lozinku"
+                           required />
+                    <label asp-for="Input.ConfirmPassword">Potvrda lozinke</label>
+                    <div class="invalid-feedback">Potvrdite lozinku.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    Registriraj se
+                </button>
+
+                <div class="text-center">
+                    <p class="mb-1">
+                        Već imate račun?
+                        <a asp-page="./Login">Prijavite se</a>
+                    </p>
+               @*      <p>
+                        <a asp-page="./ForgotPassword">Zaboravljena lozinka?</a>
+                    </p> *@
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Bootstrap client-side validation
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.forEach.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
 }

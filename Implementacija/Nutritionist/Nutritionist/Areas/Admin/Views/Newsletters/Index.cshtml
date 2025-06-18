@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Nutritionist.Models.Newsletter>
+@{
+    ViewData["Title"] = "Pregled newslettera";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>
+    <a asp-area="Admin" asp-controller="Newsletters" asp-action="Create" class="btn btn-primary">
+        Novi newsletter
+    </a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Naslov</th>
+            <th>Poslao</th>
+            <th>Datum</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var n in Model)
+        {
+            <tr>
+                <td>@n.Title</td>
+                <td>@n.User.UserName</td>
+                <td>@n.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Newsletters" asp-action="Details" asp-route-id="@n.Id">Detalji</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

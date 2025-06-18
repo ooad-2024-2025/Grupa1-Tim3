@@ -15,7 +15,7 @@ namespace Nutritionist.ViewModels
         public RecipeType Type { get; set; }
 
         [Required]
-        public TimeSpan TimeToMake { get; set; }
+        public string TimeToMake { get; set; }
 
         [Required]
         public string Ingredients { get; set; }

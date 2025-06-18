@@ -2,21 +2,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nutritionist.Data;
 using Nutritionist.Models;
+using Nutritionist.ViewModels;
 
 namespace Nutritionist.Controllers
 {
     public class ReviewController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ReviewController(ApplicationDbContext context)
+        public ReviewController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForRecipe(ReviewCreateViewModel vm)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Details", "Recipes", new { id = vm.RecipeId });
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Challenge();
+
+            var review = new Review
+            {
+                Id = Guid.NewGuid(),
+                RecipeId = vm.RecipeId,
+                UserId = user.Id,
+                Rating = vm.Rating,
+                Comment = vm.Comment,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Recipes", new { id = vm.RecipeId });
         }
 
         // GET: Review
