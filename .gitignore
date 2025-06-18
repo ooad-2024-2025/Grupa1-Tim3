@@ -51,5 +51,3 @@ bin/Release/net*/publish/
 
 ## Docker
 docker-compose.override.yml
-
-/Implementacija/Nutritionist/Nutritionist/appsettings.json
